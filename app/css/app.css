@@ -64,6 +64,16 @@ section.container{
     text-align: center;
 }
 
+.timeline{
+    position: absolute;
+    width: 13vw;
+    height: 4px;
+    background: black;
+}
+.timeline-noon{ top: calc(2vw * 21 - 2px); }
+.timeline-night{ top: calc(2vw * 57 - 2px); }
+
+
 .courses { 
     position: absolute;
     top: 7.5em;
@@ -74,7 +84,7 @@ section.container{
 }
 
 .course {
-    color: white;
+    color: #202020;
     position: absolute;
     left: 0vw;
     /*top: calc(2vw * 6);*/

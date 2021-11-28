@@ -28,37 +28,58 @@ export const main = Handlebars.compile(`
         <div class="day day1">
             <div class="picked"></div>
             <div class="title">Mon</div>
-            <div class="courses"></div>
+            <div class="courses">
+                <div class="timeline timeline-noon"></div>
+                <div class="timeline timeline-night"></div>
+            </div>
         </div>
         <div class="day day2">
             <div class="picked"></div>
             <div class="title">Thu</div>
-            <div class="courses"></div>
+            <div class="courses">
+                <div class="timeline timeline-noon"></div>
+                <div class="timeline timeline-night"></div>
+            </div>
         </div>
         <div class="day day3">
             <div class="picked"></div>
             <div class="title">Wed</div>
-            <div class="courses"></div>
+            <div class="courses">
+                <div class="timeline timeline-noon"></div>
+                <div class="timeline timeline-night"></div>
+            </div>
         </div>
         <div class="day day4">
             <div class="picked"></div>
             <div class="title">Thr</div>
-            <div class="courses"></div>
+            <div class="courses">
+                <div class="timeline timeline-noon"></div>
+                <div class="timeline timeline-night"></div>
+            </div>
         </div>
         <div class="day day5">
             <div class="picked"></div>
             <div class="title">Fri</div>
-            <div class="courses"></div>
+            <div class="courses">
+                <div class="timeline timeline-noon"></div>
+                <div class="timeline timeline-night"></div>
+            </div>
         </div>
         <div class="day day6">
             <div class="picked"></div>
             <div class="title">Sat</div>
-            <div class="courses"></div>
+            <div class="courses">
+                <div class="timeline timeline-noon"></div>
+                <div class="timeline timeline-night"></div>
+            </div>
         </div>
         <div class="day day7">
             <div class="picked"></div>
             <div class="title">Sun</div>
-            <div class="courses"></div>
+            <div class="courses">
+                <div class="timeline timeline-noon"></div>
+                <div class="timeline timeline-night"></div>
+            </div>
         </div>
     </section>
 `);
