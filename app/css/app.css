@@ -19,20 +19,20 @@ section.container{
     position: absolute;
     margin: 10px 0;
 }
-.day1 { left: 6vw;}
+.day1 { left: 5vw;}
 .day2 { left: calc(18vw + 2px);}
-.day3 { left: calc(30vw + 4px);}
-.day4 { left: calc(42vw + 6px);}
-.day5 { left: calc(54vw + 8px);}
-.day6 { left: calc(66vw + 10px);}
-.day7 { left: calc(78vw + 12px);}
+.day3 { left: calc(31vw + 4px);}
+.day4 { left: calc(44vw + 6px);}
+.day5 { left: calc(57vw + 8px);}
+.day6 { left: calc(70vw + 10px);}
+.day7 { left: calc(83vw + 12px);}
 
 /*
 .picked {
     position: absolute;
     top: 0;
     left: 0;
-    width: 12vw;
+    width: 13vw;
     height: 12vw;
     background: #c0c0c0;
 }
@@ -40,26 +40,26 @@ section.container{
 .picked {
     position:fixed;
     top: 18px;
-    width: 12vw;
+    width: 13vw;
     height: 6em;
     background: #e0e0e0;
     z-index: 999;
     border-top: 4px solid white;
     border-bottom: 4px solid white;
 }
-.day1 .picked { left: 6vw;}
+.day1 .picked { left: 5vw;}
 .day2 .picked { left: calc(18vw + 2px);}
-.day3 .picked { left: calc(30vw + 4px);}
-.day4 .picked { left: calc(42vw + 6px);}
-.day5 .picked { left: calc(54vw + 8px);}
-.day6 .picked { left: calc(66vw + 10px);}
-.day7 .picked { left: calc(78vw + 12px);}
+.day3 .picked { left: calc(31vw + 4px);}
+.day4 .picked { left: calc(44vw + 6px);}
+.day5 .picked { left: calc(57vw + 8px);}
+.day6 .picked { left: calc(70vw + 10px);}
+.day7 .picked { left: calc(83vw + 12px);}
 
 .title{
     position: absolute;
     top: 6em;
     left: 0;
-    width: 12vw;
+    width: 13vw;
     height: 1em;
     text-align: center;
 }
@@ -69,7 +69,7 @@ section.container{
     top: 7.5em;
     background:#f8f8f8;
     border: 1px solid lightgray;
-    width: calc(12vw);
+    width: calc(13vw);
     height: calc(2vw * 81);
 }
 
@@ -78,7 +78,7 @@ section.container{
     position: absolute;
     left: 0vw;
     /*top: calc(2vw * 6);*/
-    width: calc(12vw - 2px);
+    width: calc(13vw - 2px);
     /*height: 12vw;*/
     text-align: center;
     font-size: small;
@@ -140,7 +140,7 @@ section.container{
 }
 
 button.pick{
-    margin-top: 8px;
+    margin-top: 4px;
     background: transparent;
 }
 button.pick:hover {
