@@ -1,0 +1,16 @@
+{
+  "serviceUrl": "http://localhost:7938",
+  "log": {
+      "format": "[:date[Asia/Taipei]] :remote-addr - :remote-user ':method :url HTTP/:http-version' :status :res[content-length] ms",
+      "dateFormat": "YYYY-MM-DD HH:mm:ss.SSS"
+  },
+  "security": {
+    "key": "./server.key",
+    "cert": "./server.pem"
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379,
+    "secret": "Redis-my-server"
+  }
+}

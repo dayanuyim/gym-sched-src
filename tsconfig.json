@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "module": "CommonJS",
+        "esModuleInterop": true,
+        "target": "ES5",
+        "lib": [
+            "DOM",
+            "ES2019"
+        ],
+        "downlevelIteration": true,
+        "allowJs": true,
+        "alwaysStrict": true
+    }
+}

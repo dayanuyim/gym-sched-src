@@ -1,0 +1,252 @@
+body{
+    font-family: Open Sans;
+    margin: 0px;
+}
+
+.header{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/** unit: 2vw / 10min **/
+section.container{
+    margin-bottom: 10px;
+    height: calc(2vw * 81);
+}
+
+.day {
+    position: absolute;
+    margin: 10px 0;
+}
+.day1 { left: 6vw;}
+.day2 { left: calc(18vw + 2px);}
+.day3 { left: calc(30vw + 4px);}
+.day4 { left: calc(42vw + 6px);}
+.day5 { left: calc(54vw + 8px);}
+.day6 { left: calc(66vw + 10px);}
+.day7 { left: calc(78vw + 12px);}
+
+/*
+.picked {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 12vw;
+    height: 12vw;
+    background: #c0c0c0;
+}
+*/
+.picked {
+    position:fixed;
+    top: 18px;
+    width: 12vw;
+    height: 6em;
+    background: #e0e0e0;
+    z-index: 999;
+    border-top: 4px solid white;
+    border-bottom: 4px solid white;
+}
+.day1 .picked { left: 6vw;}
+.day2 .picked { left: calc(18vw + 2px);}
+.day3 .picked { left: calc(30vw + 4px);}
+.day4 .picked { left: calc(42vw + 6px);}
+.day5 .picked { left: calc(54vw + 8px);}
+.day6 .picked { left: calc(66vw + 10px);}
+.day7 .picked { left: calc(78vw + 12px);}
+
+.title{
+    position: absolute;
+    top: 6em;
+    left: 0;
+    width: 12vw;
+    height: 1em;
+    text-align: center;
+}
+
+.courses { 
+    position: absolute;
+    top: 7.5em;
+    background:#f8f8f8;
+    border: 1px solid lightgray;
+    width: calc(12vw);
+    height: calc(2vw * 81);
+}
+
+.course {
+    color: white;
+    position: absolute;
+    left: 0vw;
+    /*top: calc(2vw * 6);*/
+    width: calc(12vw - 2px);
+    /*height: 12vw;*/
+    text-align: center;
+    font-size: small;
+    padding: 6px 2px 2px 20%;
+    border-top: 1px solid #808080;
+    border-bottom: 1px solid #808080;
+}
+
+.course1 { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%, 20% 20%, 0% 20%); }
+.course2 { clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 20% 100%, 20% 45%, 0% 45%, 0% 25%, 20% 25%); }
+.course3 { clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 20% 100%, 20% 70%, 0% 70%, 0% 50%, 20% 50%); }
+.course4 { clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 20% 100%, 20% 95%, 0% 95%, 0% 75%, 20% 75%); }
+
+.course-sn{
+    position: absolute;
+    font-weight: bold;
+    left: 4px;
+}
+.course-sn1{ top: 0; }
+.course-sn2{ top: 25%; }
+.course-sn3{ top: 50%; }
+.course-sn4{ top: 75%; }
+
+.course-strength1 { background: #cd2d21; }
+.course-strength2 { background: #C93756; }
+.course-strength3 { background: #DB5A6B; }
+.course-strength4 { background: #F47983; }
+.course-strength5 { background: #F08F90; }
+
+.course-swim1{ background: #009dc4; }
+.course-swim2{ background: #009dc4; }
+.course-swim3{ background: #009dc4; }
+.course-swim4{ background: #009dc4; }
+
+.course-yoga1{ background: #7BC4C4}
+.course-yoga2{ background: #98DDDF}
+.course-yoga3{ background: #53B0AE}
+.course-yoga4{ background: #00A1B4}
+.course-yoga5{ background: #097988}
+
+.course-aerobic{ background: lightgreen; }
+.course-aerobic1{ background: #26A65B; }
+.course-aerobic2{ background: #26C281; }
+.course-aerobic3{ background: #049372; }
+.course-aerobic4{ background: #006442; }
+
+.course-spinning1{ background: #facd56; }
+.course-spinning2{ background: #fa990e; }
+.course-spinning3{ background: #e06c23; }
+.course-spinning4{ background: goldenrod; }
+
+.course-dance1{ background: #B8A1CF;}
+.course-dance2{ background: #e6cfe6;}
+.course-dance3{ background: #B8A1CF;}
+.course-dance4{ background: #e6cfe6;}
+
+.course-name {
+    font-weight: bold;
+}
+
+button.pick{
+    margin-top: 8px;
+    background: transparent;
+}
+button.pick:hover {
+    background: whitesmoke;
+}
+
+/****************************/
+
+h1, section{
+    margin: 8px 0;
+}
+
+h1 a:link, h1 a:visited{ color: black; text-decoration: none; }
+h1 a:hover, h1 a:active{ color: black; text-decoration: underline; font-weight: bold;}
+
+
+#theaterModal textarea {
+    height: 25em;
+}
+
+#theaterModal .form-group {
+    margin: 0;
+}
+
+.periods{
+    position: absolute;
+    left: 35%;
+    /*display:none;*/
+}
+
+input[type=checkbox]:checked ~ .periods{
+    display: inline;
+}
+
+.period-desc{
+    font-family: "Courier New", Courier, monospace;
+    margin-right: .5em;
+}
+
+.sched{
+    position: relative;
+    height: 50px;
+    margin-bottom: 5px;
+}
+
+.sched-sn{
+    display: inline-block;
+    font-weight: bold;
+    line-height: 50px;
+}
+
+.sched-slots{
+    left: 20px;
+    width: calc(100% - 20px);
+    height: 50px;
+    position: absolute;
+    display: inline-block;
+    box-sizing: border-box;
+    border: darkgray solid 1px;
+    /*background: lightgray;*/
+}
+
+.slot-gap{
+    height: 48px;
+    position: absolute;
+    background-color: lightgray;
+}
+.slot-gap:hover{ background-color: ghostwhite;}
+
+div.slot{
+    color: darkslategray;
+    white-space: nowrap;
+    font-weight: bold;
+    height: 48px;
+    display: inline-block;
+    position: absolute;
+    box-sizing: border-box;
+    border: darkgray solid;
+    border-width: 0 1px;
+    z-index: 1;  /* keep nowarp text top */
+}
+div.slot-begin{ border-left-width: 0;}
+div.slot-end{ border-right-width: 0;}
+
+.slot0{ background: lightpink;}
+.slot0:hover{ background: lavenderblush;}
+.slot1{ background: orange;}
+.slot1:hover{ background: gold;}
+.slot2{ background: yellow;}
+.slot2:hover{ background: lightyellow;}
+.slot3{ background: lightgreen;}
+.slot3:hover{ background: palegreen;}
+.slot4{ background: lightblue;}
+.slot4:hover{ background: lightcyan;}
+.slot5{ background: plum;}
+.slot5:hover{ background: mistyrose;}
+.slot6{ background: salmon;}
+.slot6:hover{ background: lightsalmon;}
+.slot7{ background: tan;}
+.slot7:hover{ background: wheat;}
+.slot8{ background: darkkhaki;}
+.slot8:hover{ background: khaki;}
+.slot9{ background: yellowgreen;}
+.slot9:hover{ background: lawngreen;}
+.slot10{ background: lightskyblue;}
+.slot10:hover{ background: aliceblue;}
+.slot11{ background: mediumorchid;}
+.slot11:hover{ background: mediumpurple;}
+
