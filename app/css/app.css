@@ -41,7 +41,7 @@ section.container{
     position:fixed;
     top: 18px;
     width: 13vw;
-    height: 6em;
+    height: 8em;
     background: #e0e0e0;
     z-index: 999;
     border-top: 4px solid white;
@@ -55,9 +55,12 @@ section.container{
 .day6 .picked { left: calc(70vw + 10px);}
 .day7 .picked { left: calc(83vw + 12px);}
 
+.picked .course:first-child  { top: 0; }
+.picked .course:nth-child(2) { top: 2em; }
+
 .title{
     position: absolute;
-    top: 6em;
+    top: 8em;
     left: 0;
     width: 13vw;
     height: 1em;
@@ -76,7 +79,7 @@ section.container{
 
 .courses { 
     position: absolute;
-    top: 7.5em;
+    top: 9.5em;
     background:#f8f8f8;
     border: 1px solid lightgray;
     width: calc(13vw);
@@ -151,6 +154,7 @@ section.container{
 
 button.pick{
     margin-top: 4px;
+    width: 2em;
     background: transparent;
 }
 button.pick:hover {

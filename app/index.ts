@@ -10,7 +10,7 @@ import * as templates from './templates';
 import {Period, strToMinutes, findLastIndex} from './utils.js';
 import {htmlToElement} from './dom-utils';
 
-var MAX_Z = 0;
+let MAX_Z = 0;
 const Basetime = strToMinutes("08:30");
 
 // define 2vw per 10min. (use "vw" here, not "vh"!)
@@ -42,8 +42,13 @@ function getCourses(){
 }
 
 function listCourses(){
+    // hide pick courses
+    document.body.querySelectorAll('.picked .course').forEach(el => {
+        (<HTMLElement>el).style.display = 'none';
+    })
+
     const courses = getCourses();
-    for(var day = 1; day <= 7; ++day){
+    for(let day = 1; day <= 7; ++day){
         listDayCourses(day, courses.filter(c => c.day == day));
     }
 }
@@ -58,26 +63,33 @@ function listDayCourses(day: number, courses)
         return Math.max(1, last.overlay_sn + 1 - diff);
     }
 
-    const day_el = document.querySelector(`.day${day} .courses`);
+    const courses_el = document.querySelector(`.day${day} .courses`);
 
-    for(var i = 0; i < courses.length; ++i) {
+    //fill up the courses
+    for(let i = 0; i < courses.length; ++i) {
         const course = courses[i];
-
-        course['sn'] = i + 1;
-        course['overlay_sn'] = (i == 0)? 1: get_overlay_sn(course, courses[i-1]);  //i - findIdxLast(courses, i, (c1, c2) => !c1.period.is_overlay(c2.period));
-        course['type_sn'] = i - findLastIndex(courses, c => c.type != course.type, i -1);
-        course['pick'] = true;
-        day_el.insertAdjacentElement('beforeend', createCourse(course));
+        Object.assign(course, {
+            pickable: true,
+            id: Math.floor(Math.random() * 1000000),
+            sn: i + 1,
+            overlay_sn: (i == 0)? 1: get_overlay_sn(course, courses[i-1]),  //i - findIdxLast(courses, i, (c1, c2) => !c1.period.is_overlay(c2.period));
+            type_sn: i - findLastIndex(courses, c => c.type != course.type, i -1),
+        });
+        courses_el.insertAdjacentElement('beforeend', createCourse(course));
     }
 }
 
+//TODO: handle whetehr has pick buttons or not
 function createCourse(course): HTMLElement {
     const el = htmlToElement(templates.course(course));
     setCoursePosition(el, course.period);
     el.addEventListener("click", courseTopHandler);
 
-    const btn = <HTMLButtonElement>el.querySelector('button.pick');
-    btn.addEventListener("click",  coursePickHandler);
+    if (course.pickable) {
+        el.querySelectorAll('button.pick').forEach(btn => {
+            btn.addEventListener("click", coursePickHandlers[btn.innerHTML]);
+        });
+    }
 
     return el;
 }
@@ -93,25 +105,46 @@ const courseTopHandler = e => {
     course.style.zIndex = (++MAX_Z).toString();
 };
 
-const coursePickHandler = e => {
-    const target = <HTMLElement>e.target;
-    const course = <HTMLElement>target.closest(".course");
-    const day = <HTMLElement>course.closest(".day");
-    const picked = day.querySelector(".picked");
+const coursePickHandlers = [
+    null,
+    mkCoursePickHandler(1),
+    mkCoursePickHandler(2),
+];
 
-    picked.innerHTML = templates.course({
-        pick:       false,
-        sn:         course.querySelector(".course-sn").innerHTML,
-        overlay_sn: course.querySelector(".course-overlay-sn").innerHTML,
-        type_sn:    course.querySelector(".course-type-sn").innerHTML,
-        type:       course.querySelector(".course-type").innerHTML,
-        loc:        course.querySelector(".course-loc").innerHTML,
-        period:     course.querySelector(".course-period").innerHTML,
-        name:       course.querySelector(".course-name").innerHTML,
-        teacher:    course.querySelector(".course-teacher").innerHTML,
-    });
-    //(<HTMLElement>picked.querySelector(".course")).style.height = course.style.height;
-};
+function mkCoursePickHandler(pos){
+    return e => {
+        const course = <HTMLElement>e.target.closest(".course");
+        const day = <HTMLElement>course.closest(".day");
+
+        const pickeds = Array.from<HTMLElement>(day.querySelectorAll(".picked .course"));
+
+        /*
+        //check if any duplication
+        const course_id = course.querySelector(".course-id").innerHTML;
+        if(pickeds.find(c => c.querySelector(".course-id").innerHTML == course_id))
+            return;
+        */
+
+        const picked = pickeds[pos-1];
+        picked.outerHTML = templates.course({
+                pickable:   false,
+                id:         course.querySelector(".course-id").innerHTML,
+                sn:         course.querySelector(".course-sn").innerHTML,
+                overlay_sn: course.querySelector(".course-overlay-sn").innerHTML,
+                type_sn:    course.querySelector(".course-type-sn").innerHTML,
+                type:       course.querySelector(".course-type").innerHTML,
+                loc:        course.querySelector(".course-loc").innerHTML,
+                period:     course.querySelector(".course-period").innerHTML,
+                name:       course.querySelector(".course-name").innerHTML,
+                teacher:    course.querySelector(".course-teacher").innerHTML,
+            });
+
+        day.querySelectorAll<HTMLElement>(".picked .course")[pos-1].onclick = courseTopHandler;
+        //picked.addEventListener("click", courseTopHandler);
+        //picked.style.display = "block"
+    };
+}
+
 
 const showView = async () => {
     const [view, ...params] = window.location.hash.split('/');

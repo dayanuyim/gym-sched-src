@@ -21,83 +21,77 @@ Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
     }[operator];
 });
 
+Handlebars.registerHelper('for', function(from, to, incr, block) {
+    var accum = '';
+    for(var i = from; i < to; i += incr)
+        accum += block.fn(i);
+    return accum;
+});
 
-export const main = Handlebars.compile(`
-    <h4 class="header">{{header}}</h4>
-    <section class="container">
-        <div class="day day1">
-            <div class="picked"></div>
-            <div class="title">Mon</div>
-            <div class="courses">
-                <div class="timeline timeline-noon"></div>
-                <div class="timeline timeline-night"></div>
-            </div>
-        </div>
-        <div class="day day2">
-            <div class="picked"></div>
-            <div class="title">Thu</div>
-            <div class="courses">
-                <div class="timeline timeline-noon"></div>
-                <div class="timeline timeline-night"></div>
-            </div>
-        </div>
-        <div class="day day3">
-            <div class="picked"></div>
-            <div class="title">Wed</div>
-            <div class="courses">
-                <div class="timeline timeline-noon"></div>
-                <div class="timeline timeline-night"></div>
-            </div>
-        </div>
-        <div class="day day4">
-            <div class="picked"></div>
-            <div class="title">Thr</div>
-            <div class="courses">
-                <div class="timeline timeline-noon"></div>
-                <div class="timeline timeline-night"></div>
-            </div>
-        </div>
-        <div class="day day5">
-            <div class="picked"></div>
-            <div class="title">Fri</div>
-            <div class="courses">
-                <div class="timeline timeline-noon"></div>
-                <div class="timeline timeline-night"></div>
-            </div>
-        </div>
-        <div class="day day6">
-            <div class="picked"></div>
-            <div class="title">Sat</div>
-            <div class="courses">
-                <div class="timeline timeline-noon"></div>
-                <div class="timeline timeline-night"></div>
-            </div>
-        </div>
-        <div class="day day7">
-            <div class="picked"></div>
-            <div class="title">Sun</div>
-            <div class="courses">
-                <div class="timeline timeline-noon"></div>
-                <div class="timeline timeline-night"></div>
-            </div>
-        </div>
-    </section>
-`);
+////////////////////////////////////////////////////////////////////////
 
 export const course = Handlebars.compile(`
     <div class="course course{{overlay_sn}} course-{{type}}{{type_sn}}">
 
-           <span class="course-overlay-sn" style="display:none">{{overlay_sn}}</span>
-           <span class="course-type" style="display:none">{{type}}</span>
-           <span class="course-type-sn" style="display:none">{{type_sn}}</span>
+           <span style="display:none" class="course-id">{{id}}</span>
+           <span style="display:none" class="course-overlay-sn">{{overlay_sn}}</span>
+           <span style="display:none" class="course-type">{{type}}</span>
+           <span style="display:none" class="course-type-sn">{{type_sn}}</span>
 
            <span class="course-sn course-sn{{overlay_sn}}">{{sn}}</span>
         🏠 <span class="course-loc">{{loc}}</span><br>
         ⏳ <span class="course-period">{{period}}</span><br>
            <span class="course-name">{{name}}</span><br>
         👱 <span class="course-teacher">{{teacher}}</span><br>
-        {{#if pick}}
-        <button class="pick">PICK</button>
+        {{#if pickable}}
+        <button class="pick">1</button>
+        <button class="pick">2</button>
         {{/if}}
     </div>
+`);
+
+Handlebars.registerHelper("pick_course", (sn, options) => {
+    return new Handlebars.SafeString(course({
+            pick:       false,
+            sn:         1,
+            overlay_sn: 1,
+            type_sn:    1,
+            type:       "x",
+            loc:        "na",
+            period:     "00:00~00:00",
+            name:       "noname",
+            teacher:    "noman",
+    }));
+});
+
+Handlebars.registerHelper("day_name", (sn, options) => {
+    const names = [ "None", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" ];
+    return new Handlebars.SafeString(names[sn]);
+});
+
+const day = Handlebars.compile(`
+    <div class="day day{{sn}}">
+        <div class="picked">
+            {{pick_course}}
+            {{pick_course}}
+        </div>
+        <div class="title">{{day_name sn}}</div>
+        <div class="courses">
+            <div class="timeline timeline-noon"></div>
+            <div class="timeline timeline-night"></div>
+        </div>
+    </div>
+`);
+
+Handlebars.registerHelper("day", (sn, options) => {
+    return new Handlebars.SafeString(day({sn}));
+});
+
+export const main = Handlebars.compile(`
+    <h4 class="header">{{header}}</h4>
+    <section class="container">
+        {{#for 1 8 1}}
+            {{day this}}
+        {{/for}}
+    </section>
 `);
