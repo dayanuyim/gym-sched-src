@@ -19,13 +19,13 @@ section.container{
     position: absolute;
     margin: 10px 0;
 }
-.day1 { left: 5vw;}
-.day2 { left: calc(18vw + 2px);}
-.day3 { left: calc(31vw + 4px);}
-.day4 { left: calc(44vw + 6px);}
-.day5 { left: calc(57vw + 8px);}
-.day6 { left: calc(70vw + 10px);}
-.day7 { left: calc(83vw + 12px);}
+.day0 { left: 5vw;}
+.day1 { left: calc(18vw + 2px);}
+.day2 { left: calc(31vw + 4px);}
+.day3 { left: calc(44vw + 6px);}
+.day4 { left: calc(57vw + 8px);}
+.day5 { left: calc(70vw + 10px);}
+.day6 { left: calc(83vw + 12px);}
 
 /*
 .picked {
@@ -47,13 +47,13 @@ section.container{
     border-top: 4px solid white;
     border-bottom: 4px solid white;
 }
-.day1 .picked { left: 5vw;}
-.day2 .picked { left: calc(18vw + 2px);}
-.day3 .picked { left: calc(31vw + 4px);}
-.day4 .picked { left: calc(44vw + 6px);}
-.day5 .picked { left: calc(57vw + 8px);}
-.day6 .picked { left: calc(70vw + 10px);}
-.day7 .picked { left: calc(83vw + 12px);}
+.day0 .picked { left: 5vw;}
+.day1 .picked { left: calc(18vw + 2px);}
+.day2 .picked { left: calc(31vw + 4px);}
+.day3 .picked { left: calc(44vw + 6px);}
+.day4 .picked { left: calc(57vw + 8px);}
+.day5 .picked { left: calc(70vw + 10px);}
+.day6 .picked { left: calc(83vw + 12px);}
 
 .picked .course:first-child  { top: 0; }
 .picked .course:nth-child(2) { top: 2em; }
@@ -160,107 +160,3 @@ button.pick{
 button.pick:hover {
     background: whitesmoke;
 }
-
-/****************************/
-
-h1, section{
-    margin: 8px 0;
-}
-
-h1 a:link, h1 a:visited{ color: black; text-decoration: none; }
-h1 a:hover, h1 a:active{ color: black; text-decoration: underline; font-weight: bold;}
-
-
-#theaterModal textarea {
-    height: 25em;
-}
-
-#theaterModal .form-group {
-    margin: 0;
-}
-
-.periods{
-    position: absolute;
-    left: 35%;
-    /*display:none;*/
-}
-
-input[type=checkbox]:checked ~ .periods{
-    display: inline;
-}
-
-.period-desc{
-    font-family: "Courier New", Courier, monospace;
-    margin-right: .5em;
-}
-
-.sched{
-    position: relative;
-    height: 50px;
-    margin-bottom: 5px;
-}
-
-.sched-sn{
-    display: inline-block;
-    font-weight: bold;
-    line-height: 50px;
-}
-
-.sched-slots{
-    left: 20px;
-    width: calc(100% - 20px);
-    height: 50px;
-    position: absolute;
-    display: inline-block;
-    box-sizing: border-box;
-    border: darkgray solid 1px;
-    /*background: lightgray;*/
-}
-
-.slot-gap{
-    height: 48px;
-    position: absolute;
-    background-color: lightgray;
-}
-.slot-gap:hover{ background-color: ghostwhite;}
-
-div.slot{
-    color: darkslategray;
-    white-space: nowrap;
-    font-weight: bold;
-    height: 48px;
-    display: inline-block;
-    position: absolute;
-    box-sizing: border-box;
-    border: darkgray solid;
-    border-width: 0 1px;
-    z-index: 1;  /* keep nowarp text top */
-}
-div.slot-begin{ border-left-width: 0;}
-div.slot-end{ border-right-width: 0;}
-
-.slot0{ background: lightpink;}
-.slot0:hover{ background: lavenderblush;}
-.slot1{ background: orange;}
-.slot1:hover{ background: gold;}
-.slot2{ background: yellow;}
-.slot2:hover{ background: lightyellow;}
-.slot3{ background: lightgreen;}
-.slot3:hover{ background: palegreen;}
-.slot4{ background: lightblue;}
-.slot4:hover{ background: lightcyan;}
-.slot5{ background: plum;}
-.slot5:hover{ background: mistyrose;}
-.slot6{ background: salmon;}
-.slot6:hover{ background: lightsalmon;}
-.slot7{ background: tan;}
-.slot7:hover{ background: wheat;}
-.slot8{ background: darkkhaki;}
-.slot8:hover{ background: khaki;}
-.slot9{ background: yellowgreen;}
-.slot9:hover{ background: lawngreen;}
-.slot10{ background: lightskyblue;}
-.slot10:hover{ background: aliceblue;}
-.slot11{ background: mediumorchid;}
-.slot11:hover{ background: mediumpurple;}
-

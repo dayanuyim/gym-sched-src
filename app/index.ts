@@ -13,81 +13,120 @@ import {htmlToElement} from './dom-utils';
 let MAX_Z = 0;
 const Basetime = strToMinutes("08:30");
 
+function indexOfChild(child: HTMLElement){
+    return Array.from(child.parentNode.children).indexOf(child);
+}
+
 // define 2vw per 10min. (use "vw" here, not "vh"!)
 function timeLen(value: number){
     return (value / 10 * 2) + "vw"
 }
 
-function getCourses(){
+function toInnerDay(day){
+    return day - 1;   // day 1 (Mon.) as the first day (0)
+    //return day % 7;   // day 7 (Sun.) as the first day (0)
+}
 
-    const data = require("../courses.json")
+// load courses, populate meta data, sort to uniq seq
+const Courses = function()
+{
+    const raw = require("../courses.json")
 
-    // flaten by add location, also time[] to Period.
-    const res = [];
-    for (const [loc, courses] of Object.entries(data)) {
+    //init
+    const res = Array(7).fill(0).map(e => []);
+
+    // classified by day of week, flaten by add location, group time&len to Period
+    for (const [loc, courses] of Object.entries(raw)) {
         (<Array<any>>courses).forEach(course => {
-            const begin = strToMinutes(course.time[0]);
-            const end = strToMinutes(course.time[1])
-            if(begin >= end){
-                console.error(`Invalid Time: Day(${course.day}), Name(${course.name})`);
-                return;
+            const begin = strToMinutes(course.time);
+            const end = begin + course.len;
+            const day = toInnerDay(course.day);
+            delete course.time;
+            delete course.len;
+            delete course.day;
+            if(0 <= day && day < 7){
+                Object.assign(course, {
+                    loc,
+                    period: new Period(begin, end),
+                });
+                res[day].push(course);
             }
-            res.push(Object.assign(course, {
-                loc,
-                period: new Period(begin, end),
-            }));
         });
     }
+
+    // sort by begin time, but also to define a uniqe sequence
+    res.forEach(courses => courses.sort((c1, c2) => {
+            let cmp = c1.period.begin - c2.period.begin;
+            if(cmp == 0) cmp = c1.period.end - c2.period.end;
+            if(cmp == 0) cmp = c1.type.localeCompare(c2.type);
+            if(cmp == 0) cmp = c1.loc.localeCompare(c2.loc);
+            if(cmp == 0) cmp = c1.teacher.localeCompare(c2.teacher);
+            if(cmp == 0) cmp = c1.name.localeCompare(c2.name);
+            return cmp;
+        }));
+
+    // tag position is 25% per step, usually a course is 60min. so 15min per step.
+    const get_look = (curr, last) =>{
+        const diff = Math.floor((curr.period.begin - last.period.begin) / 15);
+        return Math.max(1, last.look + 1 - diff);
+    };
+
+    // put meta data
+    res.forEach(courses => {
+        courses.forEach((curr, idx, arr) => {
+            Object.assign(curr, {
+                pickable: true,
+                sn: idx + 1,
+                look: (idx == 0)? 1: get_look(curr, arr[idx-1]),  //i - findIdxLast(courses, i, (c1, c2) => !c1.period.is_overlay(c2.period));
+                type_sn: idx - findLastIndex(arr, c => c.type != curr.type, idx -1),
+            });
+        });
+    })
     return res;
+}();
+
+function courseObjToElem(c){
+    return htmlToElement(templates.course(c));
+}
+
+function courseElemToObj(el, mod?){
+    const obj = {
+        sn:       parseInt(el.querySelector(".course-sn").innerHTML),
+        pickable: el.querySelector("button.pick") != null,
+        look:     el.querySelector(".course-look").innerHTML,
+        type_sn:  el.querySelector(".course-type-sn").innerHTML,
+        type:     el.querySelector(".course-type").innerHTML,
+        loc:      el.querySelector(".course-loc").innerHTML,
+        period:   el.querySelector(".course-period").innerHTML,
+        name:     el.querySelector(".course-name").innerHTML,
+        teacher:  el.querySelector(".course-teacher").innerHTML,
+    };
+    if(mod)
+        Object.assign(obj, mod);
+    return mod;
 }
 
 function listCourses(){
-    // hide pick courses
-    document.body.querySelectorAll('.picked .course').forEach(el => {
-        (<HTMLElement>el).style.display = 'none';
-    })
+    //restore picked courses from cookie
+    loadPickedCourses();
 
-    const courses = getCourses();
-    for(let day = 1; day <= 7; ++day){
-        listDayCourses(day, courses.filter(c => c.day == day));
-    }
-}
-
-function listDayCourses(day: number, courses)
-{
-    courses.sort((c1, c2) => c1.period.begin - c2.period.begin);
-
-    // tag position is 25% per step, usually a course is 60min. so 15min per step.
-    const get_overlay_sn = (curr, last) =>{
-        const diff = Math.floor((curr.period.begin - last.period.begin) / 15);
-        return Math.max(1, last.overlay_sn + 1 - diff);
-    }
-
-    const courses_el = document.querySelector(`.day${day} .courses`);
-
-    //fill up the courses
-    for(let i = 0; i < courses.length; ++i) {
-        const course = courses[i];
-        Object.assign(course, {
-            pickable: true,
-            id: Math.floor(Math.random() * 1000000),
-            sn: i + 1,
-            overlay_sn: (i == 0)? 1: get_overlay_sn(course, courses[i-1]),  //i - findIdxLast(courses, i, (c1, c2) => !c1.period.is_overlay(c2.period));
-            type_sn: i - findLastIndex(courses, c => c.type != course.type, i -1),
+    document.querySelectorAll('.day').forEach((day_el, day) =>{
+        const courses_el = day_el.querySelector('.courses');
+        Courses[day].forEach(c => {
+            courses_el.insertAdjacentElement('beforeend', createCourse(c));
         });
-        courses_el.insertAdjacentElement('beforeend', createCourse(course));
-    }
+    })
 }
 
 //TODO: handle whetehr has pick buttons or not
 function createCourse(course): HTMLElement {
-    const el = htmlToElement(templates.course(course));
+    const el = courseObjToElem(course);
     setCoursePosition(el, course.period);
     el.addEventListener("click", courseTopHandler);
 
     if (course.pickable) {
         el.querySelectorAll('button.pick').forEach(btn => {
-            btn.addEventListener("click", coursePickHandlers[btn.innerHTML]);
+            btn.addEventListener("click", coursePickHandler);
         });
     }
 
@@ -105,46 +144,85 @@ const courseTopHandler = e => {
     course.style.zIndex = (++MAX_Z).toString();
 };
 
-const coursePickHandlers = [
-    null,
-    mkCoursePickHandler(1),
-    mkCoursePickHandler(2),
-];
+function coursePickHandler(e)
+{
+    const pos = parseInt(e.target.innerHTML) - 1;
+    const course = <HTMLElement>e.target.closest(".course");
+    const day = <HTMLElement>course.closest(".day");
+    const day_n = indexOfChild(day);
+    const sn = parseInt(course.querySelector(".course-sn").innerHTML);
 
-function mkCoursePickHandler(pos){
-    return e => {
-        const course = <HTMLElement>e.target.closest(".course");
-        const day = <HTMLElement>course.closest(".day");
+    /*
+    //check if any duplication
+    const pickeds = Array.from(day.querySelectorAll<HTMLElement>(".picked .course"));
+    const course_id = course.querySelector(".course-id").innerHTML;
+    if(pickeds.find(c => c.querySelector(".course-id").innerHTML == course_id))
+        return;
+    const picked = pickeds[pos];
+    */
 
-        const pickeds = Array.from<HTMLElement>(day.querySelectorAll(".picked .course"));
+    setPickCourse(day_n, pos, sn);
 
-        /*
-        //check if any duplication
-        const course_id = course.querySelector(".course-id").innerHTML;
-        if(pickeds.find(c => c.querySelector(".course-id").innerHTML == course_id))
-            return;
-        */
+    //rec picked courses to coockie
+    savePickedCourses();
+ }
 
-        const picked = pickeds[pos-1];
-        picked.outerHTML = templates.course({
-                pickable:   false,
-                id:         course.querySelector(".course-id").innerHTML,
-                sn:         course.querySelector(".course-sn").innerHTML,
-                overlay_sn: course.querySelector(".course-overlay-sn").innerHTML,
-                type_sn:    course.querySelector(".course-type-sn").innerHTML,
-                type:       course.querySelector(".course-type").innerHTML,
-                loc:        course.querySelector(".course-loc").innerHTML,
-                period:     course.querySelector(".course-period").innerHTML,
-                name:       course.querySelector(".course-name").innerHTML,
-                teacher:    course.querySelector(".course-teacher").innerHTML,
-            });
+ function setPickCourse(day, pos, sn)
+ {
+    if(day < 0 || day >= 7) return;
 
-        day.querySelectorAll<HTMLElement>(".picked .course")[pos-1].onclick = courseTopHandler;
-        //picked.addEventListener("click", courseTopHandler);
-        //picked.style.display = "block"
-    };
+    const picked_el = document.body.querySelector(`.day${day} .picked`);
+    const pick_el = (pos) => picked_el.querySelectorAll<HTMLElement>('.course')[pos];
+    const courses = Courses[day];
+
+    if(sn <= 0 || sn > courses.length)
+        pick_el(pos).style.display = 'none';
+    else{
+        const c = Object.assign({}, courses[sn-1], {
+            pickable: false,
+            look : 1,
+        });
+        pick_el(pos).outerHTML = templates.course(c);
+        pick_el(pos).onclick = courseTopHandler;
+    }
+ }
+
+ function savePickedCourses()
+ {
+    const pickset = Array.from(document.body.querySelectorAll('.day')).map(day => {
+        return Array.from(day.querySelectorAll('.picked .course .course-sn')).map(sn => {
+            return parseInt(sn.innerHTML);
+        })
+    });
+
+    const value = JSON.stringify(pickset);
+    if (value.length >= 4096)
+        console.warn(`The cookie size is larger 4096: ${value.length}`)
+    document.cookie = value;
+ }
+
+ function loadPickedCourses(){
+    const pickset = getCookiePickset();
+    pickset.forEach((picks, day) => {
+        picks.forEach((sn, pos) => {
+            setPickCourse(day, pos, sn);
+        });
+    });
+ }
+
+function getCookiePickset()
+{
+    if (document.cookie){
+        try{
+            return JSON.parse(document.cookie);
+        }
+        catch (err) {
+            console.error(`Parse Cookie Error: ${err}`);
+        }
+    }
+
+    return Array(7).fill([0, 0]);
 }
-
 
 const showView = async () => {
     const [view, ...params] = window.location.hash.split('/');
