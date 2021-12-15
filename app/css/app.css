@@ -55,12 +55,13 @@ section.container{
 .day5 .picked { left: calc(70vw + 10px);}
 .day6 .picked { left: calc(83vw + 12px);}
 
+.picked .course{ padding-top: 0; padding-bottom: 0;}
 .picked .course:first-child  { top: 0; }
-.picked .course:nth-child(2) { top: 2em; }
+.picked .course:nth-child(2) { top: 3em; }
 
 .title{
     position: absolute;
-    top: 8em;
+    top: 130px;
     left: 0;
     width: 13vw;
     height: 1em;

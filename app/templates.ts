@@ -38,10 +38,10 @@ export const course = Handlebars.compile(`
            <span style="display:none" class="course-type-sn">{{type_sn}}</span>
 
            <span class="course-sn course-sn{{look}}">{{sn}}</span>
-        🏠 <span class="course-loc">{{loc}}</span><br>
-        ⏳ <span class="course-period">{{period}}</span><br>
            <span class="course-name">{{name}}</span><br>
+        ⏳ <span class="course-period">{{period}}</span><br>
         👱 <span class="course-teacher">{{teacher}}</span><br>
+        🏠 <span class="course-loc">{{loc}}</span><br>
         {{#if pickable}}
         <button class="pick">1</button>
         <button class="pick">2</button>
