@@ -66,6 +66,10 @@ Period.prototype.contains = function(rhs){
 Period.prototype.is_overlay = function(rhs){
     return !(this.begin >= rhs.end || this.end <= rhs.begin);
 }
+
+Period.prototype.is_adjacent = function(rhs){
+    return !(this.begin > rhs.end || this.end < rhs.begin);
+}
 // Slot ===========================
 export const Slot = function(label, period){
     this.label = label;

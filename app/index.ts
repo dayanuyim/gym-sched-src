@@ -7,7 +7,7 @@ import 'popper.js';
 import 'bootstrap';
 
 import * as templates from './templates';
-import {Period, strToMinutes, findLastIndex} from './utils.js';
+import {Period, strToMinutes} from './utils.js';
 import {htmlToElement} from './dom-utils';
 
 let MAX_Z = 0;
@@ -54,10 +54,10 @@ const Courses = function()
         });
     }
 
-    // sort by begin time, but also to define a uniqe sequence
+    // sort by begin time / end time, but also more to define a uniqe sequence
     res.forEach(courses => courses.sort((c1, c2) => {
-            let cmp = c1.period.begin - c2.period.begin;
-            if(cmp == 0) cmp = c1.period.end - c2.period.end;
+            let cmp = c1.period.begin - c2.period.begin;      //must
+            if(cmp == 0) cmp = c1.period.end - c2.period.end; //must, for adjecent detection (type_sn) 
             if(cmp == 0) cmp = c1.type.localeCompare(c2.type);
             if(cmp == 0) cmp = c1.loc.localeCompare(c2.loc);
             if(cmp == 0) cmp = c1.teacher.localeCompare(c2.teacher);
@@ -71,6 +71,19 @@ const Courses = function()
         return Math.max(1, last.look + 1 - diff);
     };
 
+    // search back if any adjacent course with the same type
+    const get_type_sn = (curr, arr, from) => {
+        for(let i = from; i >= 0; --i){
+            const last = arr[i];
+            if(!curr.period.is_adjacent(last.period))
+                return 1;
+            if(curr.type == last.type)
+                return last.type_sn + 1;
+            //otherwise, keep searching
+        }
+        return 1;
+    }
+
     // put meta data
     res.forEach(courses => {
         courses.forEach((curr, idx, arr) => {
@@ -78,7 +91,7 @@ const Courses = function()
                 pickable: true,
                 sn: idx + 1,
                 look: (idx == 0)? 1: get_look(curr, arr[idx-1]),  //i - findIdxLast(courses, i, (c1, c2) => !c1.period.is_overlay(c2.period));
-                type_sn: idx - findLastIndex(arr, c => c.type != curr.type, idx -1),
+                type_sn: get_type_sn(curr, arr, idx-1),
             });
         });
     })
