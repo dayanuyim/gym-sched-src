@@ -10,6 +10,8 @@ import * as templates from './templates';
 import {Period, strToMinutes} from './utils.js';
 import {htmlToElement} from './dom-utils';
 
+import Cookies from 'js-cookie';
+
 let MAX_Z = 0;
 const Basetime = strToMinutes("08:30");
 
@@ -225,10 +227,13 @@ function coursePickHandler(e)
         })
     });
 
+    /*
     const value = JSON.stringify(pickset);
     if (value.length >= 4096)
         console.warn(`The cookie size is larger 4096: ${value.length}`)
     document.cookie = value;
+    */
+    Cookies.set('pickset', JSON.stringify(pickset));
  }
 
  function loadPickedCourses(){
@@ -242,9 +247,10 @@ function coursePickHandler(e)
 
 function getCookiePickset()
 {
-    if (document.cookie){
+    const pickset = Cookies.get('pickset') || document.cookie; //TODO: the 2nd statement is for backward compatibility, remove it later.
+    if (pickset){
         try{
-            return JSON.parse(document.cookie);
+            return JSON.parse(pickset);
         }
         catch (err) {
             console.error(`Parse Cookie Error: ${err}`);
