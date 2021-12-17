@@ -106,6 +106,30 @@ section.container{
 .course3 { clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 20% 100%, 20% 70%, 0% 70%, 0% 50%, 20% 50%); }
 .course4 { clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 20% 100%, 20% 95%, 0% 95%, 0% 75%, 20% 75%); }
 
+.course:hover .course-del {
+    display: block;
+}
+.course-del:hover {
+    background-color: rgba(240,240,240, 1);
+    cursor: pointer;
+}
+.course-del {
+    display: none;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    line-height: 14px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: rgba(224,224,224,0.7);
+}
+
 .course-sn{
     position: absolute;
     font-weight: bold;

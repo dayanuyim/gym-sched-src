@@ -119,7 +119,7 @@ function courseElemToObj(el, mod?){
     return mod;
 }
 
-function listCourses(){
+function showCourses(){
     //restore picked courses from cookie
     loadPickedCourses();
 
@@ -135,7 +135,8 @@ function listCourses(){
 function createCourse(course): HTMLElement {
     const el = courseObjToElem(course);
     setCoursePosition(el, course.period);
-    el.addEventListener("click", courseTopHandler);
+
+    setCourseBasicEvents(el);
 
     if (course.pickable) {
         el.querySelectorAll('button.pick').forEach(btn => {
@@ -149,6 +150,21 @@ function createCourse(course): HTMLElement {
 function setCoursePosition(el: HTMLElement, period: Period){
     el.style.top = timeLen(period.begin - Basetime);
     el.style.height = timeLen(period.duration);
+}
+
+// for normal or picked course HTMLelements
+function setCourseBasicEvents(course: HTMLElement): void {
+    course.querySelector<HTMLElement>(".course-del").onclick = courseDeleteHandler;
+    course.onclick = courseTopHandler;
+}
+
+function courseDeleteHandler(e){
+    const course = <HTMLElement>e.target.closest(".course");
+    course.style.display = 'none';
+
+    if(course.querySelector('button.pick') == null){ // is picked course
+        savePickedCourses();
+    }
 }
 
 const courseTopHandler = e => {
@@ -196,15 +212,16 @@ function coursePickHandler(e)
             look : 1,
         });
         pick_el(pos).outerHTML = templates.course(c);
-        pick_el(pos).onclick = courseTopHandler;
+        setCourseBasicEvents(pick_el(pos));
     }
  }
 
  function savePickedCourses()
  {
     const pickset = Array.from(document.body.querySelectorAll('.day')).map(day => {
-        return Array.from(day.querySelectorAll('.picked .course .course-sn')).map(sn => {
-            return parseInt(sn.innerHTML);
+        return Array.from(day.querySelectorAll<HTMLElement>('.picked .course .course-sn')).map(sn => {
+            return (sn.offsetParent === null)? // is hidden?
+                    0: parseInt(sn.innerHTML);
         })
     });
 
@@ -241,7 +258,7 @@ const showView = async () => {
     const [view, ...params] = window.location.hash.split('/');
     switch(view){
         case '#main':
-            listCourses();
+            showCourses();
             break;
         default:
             throw Error(`Unrecognized view: ${view}`);

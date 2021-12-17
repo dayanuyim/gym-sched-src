@@ -32,6 +32,7 @@ Handlebars.registerHelper('for', function(from, to, incr, block) {
 
 export const course = Handlebars.compile(`
     <div class="course course{{look}} course-{{type}}{{type_sn}}">
+        <div class="course-del">&times;</div>
 
            <span style="display:none" class="course-look">{{look}}</span>
            <span style="display:none" class="course-type">{{type}}</span>
