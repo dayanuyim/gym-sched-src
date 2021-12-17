@@ -14,7 +14,7 @@ module.exports = {
     },
     resolve: {
         // Add `.ts` and `.tsx` as a resolvable extension.
-        extensions: [".ts", ".tsx", ".js"]
+        extensions: [".ts", ".tsx", ".js", ".jsx", ".css"]
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -42,7 +42,10 @@ module.exports = {
             use: [ MiniCssExtractPlugin.loader, 'css-loader',/* 'postcss-loader', 'sass-loader', */],
         }, {
             test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-            loader: 'url-loader?limit=100000',
+            loader: 'url-loader',
+            options: {
+                limit: 100000,
+            },
         }],
     },
 };
