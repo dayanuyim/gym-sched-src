@@ -138,7 +138,7 @@ function createCourse(course): HTMLElement {
     const el = courseObjToElem(course);
     setCoursePosition(el, course.period);
 
-    setCourseBasicEvents(el);
+    initCourse(el);
 
     if (course.pickable) {
         el.querySelectorAll('button.pick').forEach(btn => {
@@ -155,7 +155,8 @@ function setCoursePosition(el: HTMLElement, period: Period){
 }
 
 // for normal or picked course HTMLelements
-function setCourseBasicEvents(course: HTMLElement): void {
+function initCourse(course: HTMLElement): void {
+    course.style.zIndex = (++MAX_Z).toString();
     course.querySelector<HTMLElement>(".course-del").onclick = courseDeleteHandler;
     course.onclick = courseTopHandler;
 }
@@ -202,8 +203,8 @@ function coursePickHandler(e)
  {
     if(day < 0 || day >= 7) return;
 
-    const picked_el = document.body.querySelector(`.day${day} .picked`);
-    const pick_el = (pos) => picked_el.querySelectorAll<HTMLElement>('.course')[pos];
+    const picks_el = document.body.querySelector(`.day${day} .picked`);
+    const pick_el = (pos) => picks_el.querySelectorAll<HTMLElement>('.course')[pos];
     const courses = Courses[day];
 
     if(sn <= 0 || sn > courses.length)
@@ -214,7 +215,7 @@ function coursePickHandler(e)
             look : 1,
         });
         pick_el(pos).outerHTML = templates.course(c);
-        setCourseBasicEvents(pick_el(pos));
+        initCourse(pick_el(pos));
     }
  }
 
