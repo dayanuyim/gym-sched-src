@@ -137,15 +137,7 @@ function showCourses(){
 function createCourse(course): HTMLElement {
     const el = courseObjToElem(course);
     setCoursePosition(el, course.period);
-
     initCourse(el);
-
-    if (course.pickable) {
-        el.querySelectorAll('button.pick').forEach(btn => {
-            btn.addEventListener("click", coursePickHandler);
-        });
-    }
-
     return el;
 }
 
@@ -159,6 +151,11 @@ function initCourse(course: HTMLElement): void {
     course.style.zIndex = (++MAX_Z).toString();
     course.querySelector<HTMLElement>(".course-del").onclick = courseDeleteHandler;
     course.onclick = courseTopHandler;
+
+    //set event of buttons, if any
+    course.querySelectorAll('button.pick').forEach(btn => {
+        btn.addEventListener("click", coursePickHandler);
+    });
 }
 
 function courseDeleteHandler(e){
@@ -178,7 +175,7 @@ const courseTopHandler = e => {
 
 function coursePickHandler(e)
 {
-    const pos = parseInt(e.target.innerHTML) - 1;
+    const pos = parseInt(e.target.innerHTML);
     const course = <HTMLElement>e.target.closest(".course");
     const day = <HTMLElement>course.closest(".day");
     const day_n = indexOfChild(day);
@@ -204,19 +201,20 @@ function coursePickHandler(e)
     if(day < 0 || day >= 7) return;
 
     const picks_el = document.body.querySelector(`.day${day} .picked`);
-    const pick_el = (pos) => picks_el.querySelectorAll<HTMLElement>('.course')[pos];
+    const pick_el_of = (pos) => picks_el.querySelector<HTMLElement>(`.course:nth-child(${pos})`);
     const courses = Courses[day];
 
-    if(sn <= 0 || sn > courses.length)
-        pick_el(pos).style.display = 'none';
-    else{
-        const c = Object.assign({}, courses[sn-1], {
-            pickable: false,
-            look : 1,
-        });
-        pick_el(pos).outerHTML = templates.course(c);
-        initCourse(pick_el(pos));
+    if(sn <= 0 || sn > courses.length){
+        pick_el_of(pos).style.display = 'none';
+        return;
     }
+
+    const c = Object.assign({}, courses[sn-1], {
+        pickable: false,
+        look : 1,
+    });
+    pick_el_of(pos).outerHTML = templates.course(c);
+    initCourse(pick_el_of(pos));
  }
 
  function savePickedCourses()
@@ -241,7 +239,7 @@ function coursePickHandler(e)
     const pickset = getCookiePickset();
     pickset.forEach((picks, day) => {
         picks.forEach((sn, pos) => {
-            setPickCourse(day, pos, sn);
+            setPickCourse(day, pos+1, sn);
         });
     });
  }
