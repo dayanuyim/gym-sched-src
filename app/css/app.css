@@ -178,7 +178,11 @@ section.container{
     font-weight: bold;
 }
 
+.course:hover button.pick{
+    display: inline;
+}
 button.pick{
+    display: none;
     margin-top: 4px;
     width: 2em;
     background: transparent;

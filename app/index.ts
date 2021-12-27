@@ -12,8 +12,12 @@ import {htmlToElement} from './dom-utils';
 
 import Cookies from 'js-cookie';
 
-let MAX_Z = 0;
 const Basetime = strToMinutes("08:30");
+
+let MAX_Z = 0;
+function nextIndexZ(){
+    return `${++MAX_Z}`;
+}
 
 function indexOfChild(child: HTMLElement){
     return Array.from(child.parentNode.children).indexOf(child);
@@ -148,7 +152,7 @@ function setCoursePosition(el: HTMLElement, period: Period){
 
 // for normal or picked course HTMLelements
 function initCourse(course: HTMLElement): void {
-    course.style.zIndex = (++MAX_Z).toString();
+    course.style.zIndex = nextIndexZ();
     course.querySelector<HTMLElement>(".course-del").onclick = courseDeleteHandler;
     course.onclick = courseTopHandler;
 
@@ -170,7 +174,7 @@ function courseDeleteHandler(e){
 const courseTopHandler = e => {
     const target = <HTMLElement>e.target;
     const course = <HTMLElement>target.closest(".course")
-    course.style.zIndex = (++MAX_Z).toString();
+    course.style.zIndex = nextIndexZ();
 };
 
 function coursePickHandler(e)
@@ -272,7 +276,7 @@ const showView = async () => {
 
 // Page setup.
 (async () => {
-    document.body.innerHTML = templates.main({header: "12月"});
+    document.body.innerHTML = templates.main({header: "2022.01"});
     window.addEventListener('hashchange', showView);
     showView().catch(err => window.location.hash = '#main');
 })();
